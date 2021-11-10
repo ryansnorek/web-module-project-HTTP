@@ -6,6 +6,8 @@ import axios from 'axios';
 
 const EditMovieForm = (props) => {
 	const { push } = useHistory();
+	// Grab the id out of the URL parameters
+	const { id } = useParams();
 
 	const [movie, setMovie] = useState({
 		title:"",
@@ -14,16 +16,27 @@ const EditMovieForm = (props) => {
 		metascore: 0,
 		description: ""
 	});
-	
+
+	// When this component mounts use the id to request the api data and update the movie state
+	useEffect(() => {
+		axios.get(`http://localhost:5000/api/movies/${id}`)
+			.then(res => setMovie(res.data))
+			.catch(err => console.error(err));
+	},[]);
+
 	const handleChange = (e) => {
-        setMovie({
-            ...movie,
-            [e.target.name]: e.target.value
-        });
+        setMovie({ ...movie, [e.target.name]: e.target.value });
     }
 
     const handleSubmit = (e) => {
 		e.preventDefault();
+		// Make a put request to update the api with the new movie and then redirect to the movie page
+		axios.put(`http://localhost:5000/api/movies/${id}`, movie)
+			.then(res => {
+				props.setMovies([ ...props.movies, res.data])
+				push(`/movies/${id}`);
+			})
+			.catch(err => console.error(err));
 	}
 	
 	const { title, director, genre, metascore, description } = movie;
@@ -60,7 +73,7 @@ const EditMovieForm = (props) => {
 				</div>
 				<div className="modal-footer">			    
 					<input type="submit" className="btn btn-info" value="Save"/>
-					<Link to={`/movies/1`}><input type="button" className="btn btn-default" value="Cancel"/></Link>
+					<Link to={`/movies/${id}`}><input type="button" className="btn btn-default" value="Cancel"/></Link>
 				</div>
 			</form>
 		</div>
