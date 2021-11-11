@@ -1,33 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams, useHistory } from 'react-router-dom';
-
+import DeleteMovieModal from './DeleteMovieModal';
 import axios from 'axios';
 
 const Movie = (props) => {
     const { addToFavorites } = props;
-
     const [movie, setMovie] = useState('');
 
     const { id } = useParams();
     const { push } = useHistory();
 
-    useEffect(()=>{
+    useEffect(() =>{
         axios.get(`http://localhost:5000/api/movies/${id}`)
-            .then(res=>{
+            .then(res =>{
                 setMovie(res.data);
             })
-            .catch(err=>{
+            .catch(err =>{
                 console.log(err.response);
             })
     }, [id]);
 
     const handleDelete = () => {    
-        axios.delete(`http://localhost:5000/api/movies/${id}`)
-            .then(res => {
-                props.deleteMovie(res.data);
-                push("/movies")
-            })
-            .catch(err => console.error(err));
+        push(`/movies/delete/${id}`);        
     };
 
     return(<div className="modal-page col">
