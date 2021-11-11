@@ -4,7 +4,7 @@ import DeleteMovieModal from './DeleteMovieModal';
 import axios from 'axios';
 
 const Movie = (props) => {
-    const { addToFavorites } = props;
+    const { favoriteMovies, addToFavorites } = props;
     const [movie, setMovie] = useState('');
 
     const { id } = useParams();
@@ -24,7 +24,9 @@ const Movie = (props) => {
         push(`/movies/delete/${id}`);        
     };
     const handleAddFavorite = () => {
-        props.addToFavorites(movie);
+        if (!favoriteMovies.includes(movie)) {
+            addToFavorites(movie);
+        }
     };
 
     return(<div className="modal-page col">

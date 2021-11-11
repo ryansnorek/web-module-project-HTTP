@@ -9,7 +9,7 @@ const FavoriteMovieList = (props) => {
         push(`/movies/${id}`);
     };
     return (<div className="col-xs savedContainer">
-        <h5>Favorite Movies</h5>
+        <h5>Favorites</h5>
         {
             favoriteMovies.map(movie=>{
                 return <Link onClick={handleClickFavorite(movie.id)} key={movie.id} className="btn btn-light savedButton" to={`/movies/${movie.id}`}>{movie.title}</Link>
